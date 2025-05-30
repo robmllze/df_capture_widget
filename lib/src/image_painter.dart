@@ -10,14 +10,9 @@
 // ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓
 //.title~
 
-import 'dart:math' as math;
 import 'dart:ui' as ui show Image;
 
-import 'package:flutter/cupertino.dart' show BuildContext;
-import 'package:flutter/material.dart' show LayoutBuilder;
-import 'package:flutter/rendering.dart';
-import 'package:flutter/src/widgets/basic.dart';
-import 'package:flutter/widgets.dart' show CustomPaint, StatelessWidget, Widget, SizedBox;
+import 'package:flutter/widgets.dart';
 
 import 'widget_to_image.dart';
 
@@ -41,39 +36,40 @@ Future<CustomPaint?> widgetToImagePaint(
 // ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
 
 class ImagePainter extends CustomPainter {
-  final ui.Image image;
-  final Size? expectedSize;
+  //
+  //
+  //
 
-  const ImagePainter(this.image, {this.expectedSize});
+  final ui.Image image;
+
+  //
+  //
+  //
+
+  const ImagePainter(this.image);
+
+  //
+  //
+  //
 
   @override
   void paint(Canvas canvas, Size size) {
-    if (expectedSize != null &&
-        expectedSize != Size.zero &&
-        !expectedSize!.isEmpty &&
-        size != Size.zero &&
-        !size.isEmpty) {
-      final targetSize = expectedSize!;
-      final scaleX = size.width / targetSize.width;
-      final scaleY = size.height / targetSize.height;
-      final scale = math.min(scaleX, scaleY);
-      final scaledWidth = targetSize.width * scale;
-      final scaledHeight = targetSize.height * scale;
-      final dx = (size.width - scaledWidth) / 2;
-      final dy = (size.height - scaledHeight) / 2;
-      canvas.save();
-      canvas.translate(dx, dy);
-      canvas.scale(scale, scale);
-      canvas.drawImage(image, Offset.zero, Paint());
-      canvas.restore();
-    } else {
-      canvas.drawImage(image, Offset.zero, Paint());
-    }
+    paintImage(
+      canvas: canvas,
+      rect: Offset.zero & size,
+      image: image,
+      fit: BoxFit.cover,
+    );
   }
 
+  //
+  //
+  //
+
   @override
-  bool shouldRepaint(covariant ImagePainter oldDelegate) =>
-      oldDelegate.image != image || oldDelegate.expectedSize != expectedSize;
+  bool shouldRepaint(covariant CustomPainter oldDelegate) {
+    return false;
+  }
 }
 
 // ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
@@ -90,22 +86,14 @@ class ImageWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     if (image == null) return const SizedBox.shrink();
 
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        final size = Size(constraints.maxWidth, constraints.maxHeight);
-        return SizedBox.fromSize(
-          size: size,
-          child: FittedBox(
-            fit: BoxFit.contain,
-            child: CustomPaint(
-              size: size,
-              painter: ImagePainter(
-                image!,
-              ),
-            ),
-          ),
-        );
-      },
+    return FittedBox(
+      fit: BoxFit.contain,
+      child: CustomPaint(
+        size: Size(image!.width.toDouble(), image!.height.toDouble()),
+        painter: ImagePainter(
+          image!,
+        ),
+      ),
     );
   }
 }

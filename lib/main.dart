@@ -40,77 +40,77 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Material(
-        child: Column(
-          children: [
-            FilledButton(
-              onPressed: () async {
-                setState(() {
-                  picture1 = widgetToPicture(context1);
-                });
-                widgetToImage(context2).then((e) {
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              FilledButton(
+                onPressed: () async {
                   setState(() {
-                    image2 = e;
+                    picture1 = widgetToPicture(context1);
                   });
-                });
-              },
-              child: const Text('CAPTURE'),
-            ),
-            const Text('WIDGET #1:'),
-            Builder(
-              builder: (context) {
-                // We need the context.
-                context1 = context;
-                // Widget to capture must be wrapped in a RepaintBoundary.
-                return RepaintBoundary(
-                  child: Container(
-                    color: Colors.red,
-                    child: const Text('Capture this fist widget as a picture!'),
-                  ),
-                );
-              },
-            ),
-            const Text('WIDGET #2:'),
-            Builder(
-              builder: (context) {
-                // We need the context.
-                context2 = context;
-                // Widget to capture must be wrapped in a RepaintBoundary.
-                return RepaintBoundary(
-                  child: Container(
-                    color: Colors.yellow,
-                    child: const Text('Capture this second widget as an image!'),
-                  ),
-                );
-              },
-            ),
-            // const Text('PICTURE OF #1:'),
-            // if (picture1 != null)
-            //   Expanded(
-            //     child: FittedBox(
-            //       fit: BoxFit.contain,
-            //       child: PictureWidget(
-            //         picture: picture1,
-            //         expectedSize: View.of(context).physicalSize,
-            //       ),
-            //     ),
-            //   )
-            // else
-            //   const Text('...'),
-            const Text('IMAGE OF #2:'),
-            if (image2 != null)
-              Container(
-                height: 20.0,
-                color: Colors.red,
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: ImageWidget(
-                    image: image2,
-                  ),
+                  widgetToImage(context2).then((e) {
+                    setState(() {
+                      image2 = e;
+                    });
+                  });
+                },
+                child: const Text('CAPTURE'),
+              ),
+              const Text('WIDGET #1:'),
+              SizedBox(
+                width: 500,
+                height: 500,
+                child: Builder(
+                  builder: (context) {
+                    // We need the context.
+                    context1 = context;
+                    // Widget to capture must be wrapped in a RepaintBoundary.
+                    return RepaintBoundary(
+                      child: Container(
+                        color: Colors.red,
+                        child: const Text('Capture this fist widget as a picture!'),
+                      ),
+                    );
+                  },
                 ),
-              )
-            else
-              const Text('...'),
-          ],
+              ),
+              const Text('WIDGET #2:'),
+              Builder(
+                builder: (context) {
+                  // We need the context.
+                  context2 = context;
+                  // Widget to capture must be wrapped in a RepaintBoundary.
+                  return RepaintBoundary(
+                    child: Container(
+                      color: Colors.yellow,
+                      child: const Text('Capture this second widget as an image!'),
+                    ),
+                  );
+                },
+              ),
+              const Text('PICTURE OF #1:'),
+              if (picture1 != null)
+                SizedBox(
+                  height: 200,
+                  child: FittedBox(
+                    fit: BoxFit.contain,
+                    child: PictureWidget(picture: picture1, size: Size(500, 500)),
+                  ),
+                )
+              else
+                const Text('...'),
+              const Text('IMAGE OF #2:'),
+              if (image2 != null)
+                ImageWidget(
+                  image: image2,
+                )
+              else
+                const Text('...'),
+            ],
+          ),
         ),
       ),
     );

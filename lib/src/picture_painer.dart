@@ -56,25 +56,42 @@ class PicturePainter extends CustomPainter {
 
 // ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
 
+// class PictureWidget extends StatelessWidget {
+//   final ui.Picture? picture;
+//   final Size? expectedSize;
+
+//   const PictureWidget({
+//     super.key,
+//     required this.picture,
+//     this.expectedSize,
+//   });
+
+//   @override
+//   Widget build(BuildContext context) {
+//     if (picture == null) return const SizedBox.shrink();
+//     return CustomPaint(
+//       size: expectedSize ?? Size.infinite,
+//       painter: PicturePainter(
+//         picture!,
+//         expectedSize: expectedSize,
+//       ),
+//     );
+//   }
+// }
+
 class PictureWidget extends StatelessWidget {
   final ui.Picture? picture;
-  final Size? expectedSize;
+  final Size? size; // The original size of the picture when captured
 
-  const PictureWidget({
-    super.key,
-    required this.picture,
-    this.expectedSize,
-  });
+  const PictureWidget({super.key, required this.picture, this.size});
 
   @override
   Widget build(BuildContext context) {
     if (picture == null) return const SizedBox.shrink();
     return CustomPaint(
-      size: expectedSize ?? Size.infinite,
-      painter: PicturePainter(
-        picture!,
-        expectedSize: expectedSize,
-      ),
+      size: size ??
+          Size.infinite, // Allow PicturePainter to determine size based on picture content if size is null
+      painter: PicturePainter(picture!, expectedSize: size),
     );
   }
 }
